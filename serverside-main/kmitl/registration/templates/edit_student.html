@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Student</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-gray-800">
+  {% include 'nav.html' %}
+
+  <main class="p-6 max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold text-orange-500 mb-2">Edit Student</h1>
+    <p class="text-gray-500 mb-6">แก้ไขข้อมูลนักศึกษา</p>
+
+    <!-- ส่ง id -->
+    <form method="post" action="{% url 'student_edit' student.id %}"
+          class="space-y-5 bg-white p-6 rounded-xl border border-orange-100 shadow">
+      {% csrf_token %}
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label for="student_id" class="block text-sm font-medium text-gray-700">Student ID</label>
+          <input id="student_id" name="student_id" type="text" required
+                 class="mt-1 block w-full rounded-md border px-3 py-2"
+                 value="{{ student.student_id }}">
+        </div>
+
+        <div>
+          <label for="faculty" class="block text-sm font-medium text-gray-700">Faculty</label>
+          <select id="faculty" name="faculty" required
+                  class="mt-1 block w-full rounded-md border px-3 py-2 bg-white">
+            {% for fac in faculties %}
+              <option value="{{ fac.id }}" {% if fac.id == student.faculty.id %}selected{% endif %}>
+                {{ fac.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
+          <input id="first_name" name="first_name" type="text" required
+                 class="mt-1 block w-full rounded-md border px-3 py-2"
+                 value="{{ student.first_name }}">
+        </div>
+        <div>
+          <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
+          <input id="last_name" name="last_name" type="text" required
+                 class="mt-1 block w-full rounded-md border px-3 py-2"
+                 value="{{ student.last_name }}">
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input id="email" name="email" type="email" required
+                 class="mt-1 block w-full rounded-md border px-3 py-2"
+                 value="{{ student.studentprofile.email }}">
+        </div>
+        <div>
+          <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone</label>
+          <input id="phone_number" name="phone_number" type="text"
+                 class="mt-1 block w-full rounded-md border px-3 py-2"
+                 value="{{ student.studentprofile.phone_number }}">
+        </div>
+      </div>
+
+      <div>
+        <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+        <textarea id="address" name="address" rows="3"
+                  class="mt-1 block w-full rounded-md border px-3 py-2">{{ student.studentprofile.address }}</textarea>
+      </div>
+
+      <div>
+        <label for="section_ids" class="block text-sm font-medium text-gray-700">
+          Select Sections
+        </label>
+        <select id="section_ids" name="section_ids" multiple
+                class="mt-1 block w-full rounded-md border px-3 py-2 bg-white h-48">
+          {% for s in sections %}
+            <option value="{{ s.id }}"
+              {% if s in student.enrolled_sections.all %}selected{% endif %}>
+              {{ s.course.course_code }} - {{ s.course.course_name }}
+              | Sec {{ s.section_number }}
+              | {{ s.day_of_week }} {{ s.start_time }}-{{ s.end_time }}
+              | {{ s.semester }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <a href="{% url 'student-list' %}" class="px-4 py-2 rounded-lg border">Cancel</a>
+        <button type="submit" class="px-5 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600">
+          Update
+        </button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

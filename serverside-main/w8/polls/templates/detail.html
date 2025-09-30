@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detail</title>
+    <link rel="stylesheet" href="{% static 'css/bulma.css' %}">
+    </head>
+    <body>
+        <section class="section">
+            <h1 class="title">Question: {{ question.question_text }}</h1>
+            <p class="subtitle">Published date: {{ question.pub_date|date:"D d, M Y" }} ({{ question.pub_date|timesince }})</p>
+            <div class="content">
+            <ul>
+                {% for choice in choices %}
+                    <li>Choice {{forloop.counter}} => {{ choice.choice_text }} (Votes: {{choice.votes}})</li>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'vote' question.id %}" class="button ml-3">Let's Vote</a>
+            <p class="subtitle is-6">Current time: {% now "D d, M Y" %}</p>
+            </div>
+        </section>
+    </body>
+</html>
